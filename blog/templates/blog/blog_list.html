@@ -1,0 +1,43 @@
+{% extends "blog/base.html" %}
+{% block title %}ولاگ | همه پست‌ها{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>پست‌های ولاگ</h1>
+    <p>مجموعه‌ی کامل روایت‌ها، سفرها و نکاتی که تا امروز منتشر کرده‌ام.</p>
+  </div>
+</section>
+
+<section class="strip">
+  <div class="container">
+    {% if posts %}
+      <div class="post-grid">
+        {% for post in posts %}
+          <a href="{{ post.get_absolute_url }}" class="post-card">
+            <div class="post-thumb">
+              {% if post.cover_image %}
+                <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+              {% endif %}
+              <span class="badge-duration">{{ post.published_at|date:"Y/m/d" }}</span>
+            </div>
+            <div class="post-body">
+              <div class="post-title">{{ post.title }}</div>
+              <p class="post-summary">{{ post.summary|default:post.content|truncatewords:22 }}</p>
+              <div class="post-meta">
+                <span class="stats">
+                  <span>👁 {{ post.views_count }}</span>
+                  <span>❤ {{ post.likes_count }}</span>
+                  <span>💬 {{ post.comments_count }}</span>
+                </span>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-comments">هنوز پستی منتشر نشده است.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

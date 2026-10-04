@@ -1,0 +1,40 @@
+{% extends "blog/base.html" %}
+{% block title %}ولاگ | ارتباط با ما{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <h1>ارتباط با ما</h1>
+    <p>سوالی دارید یا می‌خواهید درباره‌ی همکاری صحبت کنید؟ پیام بگذارید تا پاسخ بدهیم.</p>
+  </div>
+</section>
+
+<section class="form-page">
+  <div class="container">
+    <div class="form-card">
+      <h1>فرم تماس</h1>
+      <div class="sub">اطلاعات شما فقط برای پاسخ‌گویی استفاده می‌شود.</div>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ form.name.id_for_label }}">نام</label>
+          {{ form.name }}
+          {% if form.name.errors %}<div class="field-errors">{{ form.name.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.email.id_for_label }}">ایمیل</label>
+          {{ form.email }}
+          {% if form.email.errors %}<div class="field-errors">{{ form.email.errors|striptags }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.message.id_for_label }}">پیام</label>
+          {{ form.message }}
+          {% if form.message.errors %}<div class="field-errors">{{ form.message.errors|striptags }}</div>{% endif %}
+        </div>
+        <button type="submit" class="btn btn-teal btn-block">ارسال پیام</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

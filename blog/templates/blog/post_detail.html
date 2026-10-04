@@ -1,0 +1,75 @@
+{% extends "blog/base.html" %}
+{% block title %}{{ post.title }} | ولاگ{% endblock %}
+
+{% block content %}
+
+<section class="post-detail-head">
+  <div class="container">
+    <div class="timecode"><span class="dot"></span> {{ post.published_at|date:"Y/m/d - H:i" }}</div>
+    <h1>{{ post.title }}</h1>
+  </div>
+</section>
+
+{% if post.cover_image %}
+  <div class="post-detail-cover">
+    <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+  </div>
+{% endif %}
+
+<div class="post-body-content">
+  <p>{{ post.content }}</p>
+</div>
+
+<div class="post-actions-row">
+  <form action="{% url 'like_post' post.slug %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-sm like-btn {% if is_liked %}liked{% endif %}"
+      style="{% if is_liked %}background:var(--danger); border-color:var(--danger); color:#fff;{% else %}border:1px solid var(--line); color:var(--ink-text); background:transparent;{% endif %}">
+      <span class="heart">{% if is_liked %}❤{% else %}🤍{% endif %}</span>
+      <span>{{ post.likes_count }} لایک</span>
+    </button>
+  </form>
+  <span class="timecode" style="color:var(--muted);">👁 {{ post.views_count }} بازدید</span>
+  <span class="timecode" style="color:var(--muted);">💬 {{ post.comments_count }} نظر</span>
+</div>
+
+<section class="comments-section">
+  <h2>نظرات</h2>
+
+  {% if user.is_authenticated %}
+    <form method="post" class="comment-form">
+      {% csrf_token %}
+      {{ comment_form.body }}
+      {% if comment_form.body.errors %}<div class="field-errors">{{ comment_form.body.errors|striptags }}</div>{% endif %}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-teal btn-sm">ثبت نظر</button>
+      </div>
+    </form>
+  {% else %}
+    <div class="login-to-comment">
+      <span>برای ثبت نظر باید وارد حساب کاربری خود شوید.</span>
+      <a href="{% url 'login' %}" class="btn btn-teal btn-sm">ورود به حساب</a>
+    </div>
+  {% endif %}
+
+  {% if comments %}
+    <div class="comment-list">
+      {% for comment in comments %}
+        <div class="comment-item">
+          <div class="comment-avatar">{{ comment.user.username|first|upper }}</div>
+          <div>
+            <div class="comment-head">
+              <span class="user">{{ comment.user.username }}</span>
+              <span class="time">{{ comment.created_at|date:"Y/m/d H:i" }}</span>
+            </div>
+            <div class="comment-body">{{ comment.body }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="empty-comments">هنوز نظری برای این پست ثبت نشده است. اولین نفر باشید.</p>
+  {% endif %}
+</section>
+
+{% endblock %}

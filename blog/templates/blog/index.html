@@ -1,0 +1,100 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block title %}ولاگ | خانه{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <div class="hero-eyebrow">روایت‌های تصویری هفتگی</div>
+      <h1>هر هفته یک قاب تازه از زندگی، سفر و لحظه‌های واقعی</h1>
+      <p class="lede">
+        این‌جا ولاگ شخصی من است؛ جایی که سفرها، تجربه‌ها و اتفاقات روزمره را به شکل
+        نوشته و تصویر ثبت می‌کنم تا بعدها دوباره مرورشان کنیم.
+      </p>
+      <div class="hero-actions">
+        <a href="{% url 'blog_list' %}" class="btn btn-amber">ورود به بخش ولاگ</a>
+        <a href="{% url 'about' %}" class="btn btn-outline">آشنایی با من</a>
+      </div>
+    </div>
+
+    <div class="hero-frame viewfinder">
+      <span class="vf-tr"></span><span class="vf-bl"></span>
+      <div class="hero-frame-inner">
+        <div class="timecode rec" style="color:#F2EEE4;"><span class="dot"></span> REC</div>
+        <div class="hero-frame-caption">
+          <div class="timecode">۰۰:۰۴:۱۲</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="strip">
+  <div class="container">
+    <div class="section-heading">چرا این ولاگ را دنبال کنید</div>
+    <p class="section-lead">
+      سه چیزی که این‌جا پیدا می‌کنید: روایت‌های صادقانه، جزئیات فنی برای علاقه‌مندان
+      به فیلم‌برداری و فضایی برای گفت‌وگو زیر هر پست.
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <span class="num">۰۱</span>
+        <h3>روایت واقعی</h3>
+        <p>هر پست، خلاصه‌ی یک تجربه‌ی واقعی است؛ بدون اغراق و با جزئیاتی که به کارتان می‌آید.</p>
+      </div>
+      <div class="feature-card">
+        <span class="num">۰۲</span>
+        <h3>نکات فیلم‌برداری</h3>
+        <p>تجهیزات، تنظیمات و ترفندهایی که در هر سفر امتحان کرده‌ام را با شما به اشتراک می‌گذارم.</p>
+      </div>
+      <div class="feature-card">
+        <span class="num">۰۳</span>
+        <h3>گفت‌وگوی زنده</h3>
+        <p>زیر هر پست می‌توانید نظر بدهید، لایک کنید و با دیگر خواننده‌ها هم‌صحبت شوید.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if latest_posts %}
+<section class="strip alt">
+  <div class="container">
+    <div class="section-head-row">
+      <div>
+        <div class="section-heading">تازه‌ترین پست‌ها</div>
+        <p class="section-lead" style="margin-bottom:0;">آخرین قاب‌هایی که در ولاگ منتشر شده‌اند.</p>
+      </div>
+      <a href="{% url 'blog_list' %}" class="btn btn-ghost-dark btn-sm">مشاهده همه پست‌ها</a>
+    </div>
+
+    <div class="post-grid">
+      {% for post in latest_posts %}
+        <a href="{{ post.get_absolute_url }}" class="post-card">
+          <div class="post-thumb">
+            {% if post.cover_image %}
+              <img src="{{ post.cover_image.url }}" alt="{{ post.title }}">
+            {% endif %}
+            <span class="badge-duration">{{ post.published_at|date:"Y/m/d" }}</span>
+          </div>
+          <div class="post-body">
+            <div class="post-title">{{ post.title }}</div>
+            <p class="post-summary">{{ post.summary|default:post.content|truncatewords:20 }}</p>
+            <div class="post-meta">
+              <span class="stats">
+                <span>👁 {{ post.views_count }}</span>
+                <span>❤ {{ post.likes_count }}</span>
+                <span>💬 {{ post.comments_count }}</span>
+              </span>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

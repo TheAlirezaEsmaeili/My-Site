@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}ولاگ{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+</head>
+<body>
+  
+
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="{% url 'home' %}" class="brand">
+      <span class="brand-mark"></span>
+      ولاگ
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">خانه</a></li>
+      <li><a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">درباره ما</a></li>
+      <li><a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">ارتباط با ما</a></li>
+      <li><a href="{% url 'blog_list' %}" class="{% if request.resolver_match.url_name == 'blog_list' or request.resolver_match.url_name == 'post_detail' %}active{% endif %}">ولاگ</a></li>
+    </ul>
+
+    <div class="nav-auth">
+      {% if user.is_authenticated %}
+        <span style="color:#D8D0C1; font-size:.9rem;">سلام، {{ user.username }}</span>
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline btn-sm">خروج</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-outline btn-sm">ورود</a>
+        <a href="{% url 'register' %}" class="btn btn-amber btn-sm">ثبت‌نام</a>
+      {% endif %}
+    </div>
+
+    <button class="nav-toggle" aria-label="باز کردن منو">☰</button>
+  </div>
+</nav>
+
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>ولاگ</h4>
+        <p style="max-width:38ch; font-size:.9rem;">
+          روایت‌های تصویری از سفر، زندگی روزمره و لحظه‌هایی که ارزش نگه‌داشتن دارند.
+        </p>
+      </div>
+      <div>
+        <h4>صفحات</h4>
+        <a href="{% url 'home' %}">خانه</a>
+        <a href="{% url 'about' %}">درباره ما</a>
+        <a href="{% url 'blog_list' %}">ولاگ</a>
+        <a href="{% url 'contact' %}">ارتباط با ما</a>
+      </div>
+      <div>
+        <h4>حساب کاربری</h4>
+        {% if user.is_authenticated %}
+          <span style="display:block; margin-bottom:9px; font-size:.9rem;">وارد شده به‌عنوان {{ user.username }}</span>
+        {% else %}
+          <a href="{% url 'login' %}">ورود</a>
+          <a href="{% url 'register' %}">ثبت‌نام</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {% now "Y" %} ولاگ. تمامی حقوق محفوظ است.</span>
+      <span>ساخته‌شده با Django</span>
+    </div>
+  </div>
+</footer>
+
+<script src="{% static 'blog/js/script.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
