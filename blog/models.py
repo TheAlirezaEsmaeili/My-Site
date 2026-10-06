@@ -14,6 +14,7 @@ class Post(models.Model):
     slug = models.SlugField("اسلاگ", max_length=220, unique=True, blank=True, allow_unicode=True)
     summary = models.CharField("خلاصه", max_length=300, blank=True)
     content = models.TextField("متن کامل")
+    status = models.BooleanField(default=False)
     cover_image = models.ImageField(
         "تصویر شاخص", upload_to="posts/", blank=True, null=True
     )

@@ -5,7 +5,7 @@ from .models import Comment, ContactMessage, Like, Post, PostView
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "author", "published_at", "views_count", "likes_count", "comments_count")
+    list_display = ("title", "author", "status", "published_at", "views_count", "likes_count", "comments_count")
     prepopulated_fields = {"slug": ("title",)}
     search_fields = ("title", "content")
 
