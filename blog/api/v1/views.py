@@ -6,7 +6,15 @@ from rest_framework.views import APIView
 from django.shortcuts import get_list_or_404
 from rest_framework import status
 from blog.models import Post
+from rest_framework import viewsets
 
+class PostModelViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
+
+"""
 class PostList(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
@@ -42,6 +50,5 @@ class PostDetail(APIView):
         post = get_list_or_404(post,pk=id,status=True)
         post.delete()
         return Response('deleted',status=status.HTTP_204_NO_CONTENT)
-
-
+"""
         

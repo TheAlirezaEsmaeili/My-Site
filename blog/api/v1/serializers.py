@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from django.utils import timezone
+from accounts.models import User
+
 
 class PostSerializer(serializers.Serializer):
-    title = serializers.CharField(max_length=250)
+    title = serializers.CharField(label="تیتر",max_length=250)
     published_at = serializers.DateTimeField(label="تاریخ انتشار", default=timezone.now)
     content = serializers.CharField(label="متن کامل",max_length=500)
+  
