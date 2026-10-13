@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from accounts.models import Profile
 
 User = get_user_model()
 
@@ -19,7 +20,7 @@ class Post(models.Model):
         "تصویر شاخص", upload_to="posts/", blank=True, null=True
     )
     author = models.ForeignKey(
-        User,
+        Profile,
         verbose_name="نویسنده",
         on_delete=models.SET_NULL,
         null=True,
