@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     "accounts",
     "rest_framework",
     "django_filters",
-    "drf_yasg"
+    "drf_yasg",
+    "rest_framework_simplejwt"
 ]
 
 MIDDLEWARE = [
@@ -101,6 +102,12 @@ LOGOUT_REDIRECT_URL = "home"
 # --- پیام‌ها ---
 MESSAGE_TAGS = {
     messages_constants.ERROR: "danger",
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
 }
 
 AUTH_USER_MODEL = 'accounts.User'
