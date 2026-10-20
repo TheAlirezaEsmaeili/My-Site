@@ -2,6 +2,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
+from accounts.models import Profile
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -30,4 +31,11 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {'new_password': list(e.messages)})
         return super().validate(attrs)
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source='user.email',read_only=True)
+    class Meta:
+        model = Profile
+        fields = ['id','image','first_name','last_name','email','description']
+
 
