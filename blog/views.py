@@ -45,33 +45,55 @@ def _register_view(request, post):
     PostView.objects.get_or_create(post=post, session_key=request.session.session_key)
 
 
-def post_detail(request, slug):
+class PostDetailView(TemplateView):
     """نمایش کامل یک پست همراه با کامنت‌ها و فرم ثبت کامنت."""
-    post = get_object_or_404(Post, slug=slug)
-    _register_view(request, post)
 
-    comment_form = CommentForm()
-    if request.method == "POST":
+    def get_post(self, slug):
+        post = get_object_or_404(Post, slug=slug)
+        return post
+
+    def get(self, request, slug):
+        post = self.get_post(slug)
+        _register_view(request, post)
+
+        context = {
+            "post": post,
+            "comments": post.comments.select_related("user"),
+            "comment_form": CommentForm(),
+            "is_liked": post.is_liked_by(request.user),
+        }
+
+        return render(request, "blog/post_detail.html", context)
+
+    def post(self, request, slug):
+        post = self.get_post(slug)
+
         if not request.user.is_authenticated:
-            messages.warning(request, "برای ثبت نظر ابتدا وارد حساب کاربری خود شوید.")
+            messages.warning(
+                request,
+                "برای ثبت نظر ابتدا وارد حساب کاربری خود شوید."
+            )
             return redirect("login")
+
         comment_form = CommentForm(request.POST)
+
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
             comment.post = post
             comment.user = request.user
             comment.save()
+
             messages.success(request, "نظر شما ثبت شد.")
             return redirect("post_detail", slug=post.slug)
 
-    context = {
-        "post": post,
-        "comments": post.comments.select_related("user"),
-        "comment_form": comment_form,
-        "is_liked": post.is_liked_by(request.user),
-    }
-    return render(request, "blog/post_detail.html", context)
+        context = {
+            "post": post,
+            "comments": post.comments.select_related("user"),
+            "comment_form": comment_form,
+            "is_liked": post.is_liked_by(request.user),
+        }
 
+        return render(request, "blog/post_detail.html", context)
 
 @login_required
 def like_post(request, slug):
